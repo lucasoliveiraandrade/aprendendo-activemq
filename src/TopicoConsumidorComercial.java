@@ -17,7 +17,7 @@ public class TopicoConsumidorComercial {
 
         Topic loja = (Topic) context.lookup("loja");
 
-        MessageConsumer consumer = session.createDurableSubscriber(loja, "consumidor01"); // nome do consumidor do topico
+        MessageConsumer consumer = session.createDurableSubscriber(loja, "consumidor01", "setor='Comercial'",false); // nome do consumidor do topico e condição para leitura da msg
 
         consumer.setMessageListener(message ->
         {

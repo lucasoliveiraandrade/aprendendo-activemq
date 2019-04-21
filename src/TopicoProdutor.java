@@ -17,11 +17,20 @@ public class TopicoProdutor {
 
         MessageProducer producer = session.createProducer(topico);
 
-        for (int i = 0 ; i < 20 ; i++) {
-            System.out.println("Inserindo msg " + i);
-            Message message = session.createTextMessage("teste message " + i);
-            producer.send(message);
-        }
+        System.out.println("Inserindo msg 01");
+        Message message1 = session.createTextMessage("teste message 01");
+        message1.setStringProperty("setor",  "Estoque");
+        producer.send(message1);
+
+        System.out.println("Inserindo msg 02");
+        Message message2 = session.createTextMessage("teste message 02");
+        message2.setStringProperty("setor",  "Financeiro");
+        producer.send(message2);
+
+        System.out.println("Inserindo msg 03");
+        Message message3 = session.createTextMessage("teste message 03");
+        message3.setStringProperty("setor",  "Comercial");
+        producer.send(message3);
 
         session.close();
         connection.close();
