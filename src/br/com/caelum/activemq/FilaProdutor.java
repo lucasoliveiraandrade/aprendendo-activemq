@@ -1,9 +1,10 @@
+package br.com.caelum.activemq;
+
 import javax.jms.*;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.Scanner;
 
-public class FilaConsumidor {
+public class FilaProdutor {
 
     public static void main(String[] args) throws NamingException, JMSException {
 
@@ -17,23 +18,16 @@ public class FilaConsumidor {
 
         Destination filaFinanceiro = (Destination) context.lookup("financeiro"); // Convenção do JNDI. Ver jndi.properties.
 
-        MessageConsumer consumer = session.createConsumer(filaFinanceiro);
+        MessageProducer producer = session.createProducer(filaFinanceiro);
 
-        consumer.setMessageListener(message ->
-        {
-            TextMessage textMessage = (TextMessage) message;
-
-            try {
-                System.out.println("Consumindo mensagem " + textMessage.getText());
-            } catch (JMSException e) {
-                e.printStackTrace();
-            }
-        });
-
-        new Scanner(System.in).nextLine();  // para deixar a aplicação de pé
+        for (int i = 0 ; i < 99 ; i++) {
+            System.out.println("Inserindo msg " + i);
+            Message message = session.createTextMessage("teste message " + i);
+            producer.send(message);
+        }
 
         session.close();
-        connection.stop();
+        connection.close();
         context.close();
     }
 }

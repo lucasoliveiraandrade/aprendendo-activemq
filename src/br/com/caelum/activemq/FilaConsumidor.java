@@ -1,23 +1,25 @@
+package br.com.caelum.activemq;
+
 import javax.jms.*;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Scanner;
 
-public class TopicoConsumidorFinanceiro {
+public class FilaConsumidor {
 
     public static void main(String[] args) throws NamingException, JMSException {
+
         InitialContext context = new InitialContext();
-        ConnectionFactory connectionFactory = ((ConnectionFactory) context.lookup("ConnectionFactory"));
+        ConnectionFactory connectionFactory = ((ConnectionFactory) context.lookup("ConnectionFactory")); // Convenção do JNDI. Ver jndi.properties.
 
         Connection connection = connectionFactory.createConnection();
-        connection.setClientID("financeiro");  //identificador da conexão para o topico
         connection.start();
 
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE); // informa automaticamente a fila que a leitura da msg foi feita
 
-        Topic loja = (Topic) context.lookup("loja");
+        Destination filaFinanceiro = (Destination) context.lookup("financeiro"); // Convenção do JNDI. Ver jndi.properties.
 
-        MessageConsumer consumer = session.createDurableSubscriber(loja, "consumidor01", "setor='Financeiro'", false); // nome do consumidor do topico e condição para leitura da msg
+        MessageConsumer consumer = session.createConsumer(filaFinanceiro);
 
         consumer.setMessageListener(message ->
         {
@@ -30,7 +32,7 @@ public class TopicoConsumidorFinanceiro {
             }
         });
 
-        new Scanner(System.in).nextLine(); // para deixar a aplicação de pé
+        new Scanner(System.in).nextLine();  // para deixar a aplicação de pé
 
         session.close();
         connection.stop();

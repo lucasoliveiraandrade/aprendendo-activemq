@@ -1,23 +1,25 @@
+package br.com.caelum.activemq;
+
 import javax.jms.*;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Scanner;
 
-public class TopicoConsumidorEstoque {
+public class TopicoConsumidorComercial {
 
     public static void main(String[] args) throws NamingException, JMSException {
         InitialContext context = new InitialContext();
         ConnectionFactory connectionFactory = ((ConnectionFactory) context.lookup("ConnectionFactory"));
 
         Connection connection = connectionFactory.createConnection();
-        connection.setClientID("estoque");  //identificador da conexão para o topico
+        connection.setClientID("comercial");  //identificador da conexão para o topico
         connection.start();
 
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
         Topic loja = (Topic) context.lookup("loja");
 
-        MessageConsumer consumer = session.createDurableSubscriber(loja, "consumidor01", "setor='Estoque'", false); // nome do consumidor do topico e condição para leitura da msg
+        MessageConsumer consumer = session.createDurableSubscriber(loja, "consumidor01", "setor='Comercial'",false); // nome do consumidor do topico e condição para leitura da msg
 
         consumer.setMessageListener(message ->
         {
