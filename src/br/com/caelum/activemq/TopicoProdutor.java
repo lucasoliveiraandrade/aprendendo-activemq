@@ -18,7 +18,9 @@ public class TopicoProdutor {
         Connection connection = connectionFactory.createConnection();
         connection.start();
 
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE); // informa automaticamente o topico que a leitura da msg foi feita
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE); // AUTO_ACKNOWLEDGE - informa automaticamente o topico que a leitura da msg foi feita
+                                                                                        // CLIENT_ACKNOWLEDGE - o aviso da leitura da mensagem vai ser codificada manualmente -> mensagem.acknowledge();
+                                                                                        // SESSION_TRANSACTED - o consumo da mensagem vai ser feita por meio de uma transação
 
         Topic topico = (Topic) context.lookup("loja"); // Convenção do JNDI. Ver jndi.properties.
 
